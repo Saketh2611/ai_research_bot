@@ -1,6 +1,9 @@
 name: Daily AI Research Digest
 
 on:
+  push:
+    branches:
+      - main
   schedule:
     - cron: "30 3 * * *"  # 9:00 AM IST (UTC+5:30)
   workflow_dispatch:
