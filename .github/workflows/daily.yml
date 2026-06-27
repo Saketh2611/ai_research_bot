@@ -1,0 +1,38 @@
+name: Daily AI Research Digest
+
+on:
+  schedule:
+    - cron: "30 3 * * *"  # 9:00 AM IST (UTC+5:30)
+  workflow_dispatch:
+
+jobs:
+  send-digest:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run bot
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          WHATSAPP_TOKEN: ${{ secrets.WHATSAPP_TOKEN }}
+          PHONE_NUMBER_ID: ${{ secrets.PHONE_NUMBER_ID }}
+          RECIPIENT_NUMBER: ${{ secrets.RECIPIENT_NUMBER }}
+        run: python main.py
+
+      - name: Commit sent papers tracking
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add sent_papers.json
+          git diff --cached --quiet || git commit -m "Update sent papers tracking"
+          git push
