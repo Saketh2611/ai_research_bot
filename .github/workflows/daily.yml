@@ -5,6 +5,9 @@ on:
     - cron: "30 3 * * *"  # 9:00 AM IST (UTC+5:30)
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   send-digest:
     runs-on: ubuntu-latest
